@@ -6,13 +6,16 @@ import { headers } from 'next/headers'
 import UserSearch from "@/components/UserSearch"
 import CopyButton from "@/components/CopyButton"
 import QuestionList from "@/components/QuestionList"
-import { revalidatePath } from "next/cache"
+import { Toaster } from "@/components/ui/toaster"
 
 export default async function Dashboard() {
   const session = await auth()
-  if (!session || !session.user) {
+  if (!session || !session.user || !session.user.id) {
+    console.log("No valid session, redirecting to home")
     redirect('/')
   }
+
+  console.log("Logged in user ID:", session.user.id)
 
   const questions = await prisma.question.findMany({
     where: { userId: session.user.id },
@@ -20,22 +23,12 @@ export default async function Dashboard() {
     orderBy: { createdAt: 'desc' },
   })
 
+  console.log("Fetched questions:", questions)
+
   const headersList = headers()
   const host = headersList.get('host') || ''
   const protocol = process.env.NODE_ENV === 'production' ? 'https' : 'http'
   const baseUrl = `${protocol}://${host}`
-
-  async function deleteQuestion(questionId: string) {
-    'use server'
-    try {
-      await prisma.question.delete({
-        where: { id: questionId },
-      })
-      revalidatePath('/dashboard')
-    } catch (error) {
-      console.error("Error deleting question:", error)
-    }
-  }
 
   const profileUrl = `${baseUrl}/profile/${session.user.id}`
 
@@ -51,8 +44,8 @@ export default async function Dashboard() {
         </form>
       </div>
       <div className="mb-8">
-        <h2 className="text-2xl font-semibold mb-4">Your Questions</h2>
-        <QuestionList questions={questions} deleteQuestion={deleteQuestion} />
+        <h2 className="text-2xl font-semibold mb-4">Questions Asked to You</h2>
+        <QuestionList questions={questions} />
       </div>
       <div>
         <h2 className="text-2xl font-semibold mb-4">Share Your Profile</h2>
@@ -71,6 +64,7 @@ export default async function Dashboard() {
         <h2 className="text-2xl font-semibold mb-4">Search for users</h2>
         <UserSearch />
       </div>
+      <Toaster />
     </div>
   )
 }

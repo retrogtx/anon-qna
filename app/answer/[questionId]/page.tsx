@@ -7,7 +7,7 @@ import { redirect } from "next/navigation"
 export default async function AnswerQuestion({ params }: { params: { questionId: string } }) {
   const session = await auth()
   if (!session || !session.user) {
-    return <div>Not authenticated</div>
+    redirect('/') // Redirect to home if not authenticated
   }
 
   const question = await prisma.question.findUnique({
@@ -16,7 +16,7 @@ export default async function AnswerQuestion({ params }: { params: { questionId:
   })
 
   if (!question || question.userId !== session.user.id) {
-    return <div>Question not found or you don't have permission to answer</div>
+    redirect('/dashboard') // Redirect to dashboard if question not found or user doesn't have permission
   }
 
   async function answerQuestion(formData: FormData) {

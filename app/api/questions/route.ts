@@ -10,6 +10,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
   }
 
+  console.log("Creating question for user:", userId) // Add this line for debugging
+
   try {
     const question = await prisma.question.create({
       data: {
@@ -17,6 +19,8 @@ export async function POST(request: Request) {
         userId, // This is the ID of the user receiving the question
       },
     })
+
+    console.log("Created question:", question) // Add this line for debugging
 
     return NextResponse.json(question, { status: 201 })
   } catch (error) {

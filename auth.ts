@@ -2,7 +2,6 @@ import NextAuth from "next-auth"
 import Google from "next-auth/providers/google"
 import { nanoid } from "nanoid"
 import { prisma } from "./lib/prisma"
-// import { signOut } from "next-auth/react"
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [Google({
@@ -13,21 +12,35 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     async signIn({ user, account, profile }) {
       if (!user.email) return false
 
-      const existingUser = await prisma.user.findUnique({
+      let dbUser = await prisma.user.findUnique({
         where: { email: user.email },
       })
 
-      if (!existingUser) {
-        await prisma.user.create({
+      if (!dbUser) {
+        dbUser = await prisma.user.create({
           data: {
-            id: user.id,
+            id: nanoid(),
             name: user.name || `Anonymous${nanoid(6)}`,
             email: user.email,
           },
         })
       }
 
+      user.id = dbUser.id
+
       return true
     },
+    async session({ session, token }) {
+      if (session.user && token.sub) {
+        session.user.id = token.sub;
+      }
+      return session;
+    },
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id
+      }
+      return token
+    }
   },
 })
