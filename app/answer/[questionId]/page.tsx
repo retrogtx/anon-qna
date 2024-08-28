@@ -12,6 +12,7 @@ export default async function AnswerQuestion({ params }: { params: { questionId:
 
   const question = await prisma.question.findUnique({
     where: { id: params.questionId },
+    include: { user: true },
   })
 
   if (!question || question.userId !== session.user.id) {
@@ -24,22 +25,20 @@ export default async function AnswerQuestion({ params }: { params: { questionId:
     if (typeof content !== "string" || !content.trim()) {
       throw new Error("Invalid answer content")
     }
-
-    if (!session || !session.user?.id) {
-      throw new Error("User not authenticated")
-    }
-
     if (!question) {
       throw new Error("Question not found")
     }
-
+    if (!session || !session.user) {
+      throw new Error("User not authenticated")
+    }
     await prisma.answer.create({
       data: {
         content: content.trim(),
-        question: { connect: { id: question.id } },
-        user: { connect: { id: session.user.id } },
+        questionId: question.id,
+        userId: session.user.id!,
       },
     })
+    
     redirect("/dashboard")
   }
 

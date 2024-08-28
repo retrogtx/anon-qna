@@ -3,19 +3,24 @@ import { prisma } from "@/lib/prisma"
 
 export async function POST(request: Request) {
   const formData = await request.formData()
-  const userId = formData.get("userId") as string
   const content = formData.get("content") as string
+  const userId = formData.get("userId") as string
 
-  if (!userId || !content) {
+  if (!content || !userId) {
     return NextResponse.json({ error: "Missing required fields" }, { status: 400 })
   }
 
-  const question = await prisma.question.create({
-    data: {
-      content,
-      userId,
-    },
-  })
+  try {
+    const question = await prisma.question.create({
+      data: {
+        content,
+        userId, // This is the ID of the user receiving the question
+      },
+    })
 
-  return NextResponse.json(question)
+    return NextResponse.json(question, { status: 201 })
+  } catch (error) {
+    console.error("Error creating question:", error)
+    return NextResponse.json({ error: "Error creating question" }, { status: 500 })
+  }
 }

@@ -2,6 +2,7 @@ import NextAuth from "next-auth"
 import Google from "next-auth/providers/google"
 import { nanoid } from "nanoid"
 import { prisma } from "./lib/prisma"
+// import { signOut } from "next-auth/react"
 
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [Google({
