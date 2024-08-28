@@ -1,7 +1,7 @@
 import { auth } from "@/auth"
 import { Button } from "@/components/ui/button"
 import { prisma } from "@/lib/prisma"
-import { Key, ReactElement, JSXElementConstructor, ReactNode, ReactPortal, AwaitedReactNode } from "react"
+import Link from "next/link"
 
 export default async function Dashboard() {
   const session = await auth()
@@ -16,17 +16,19 @@ export default async function Dashboard() {
   })
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="max-w-2xl mx-auto">
       <h1 className="text-3xl font-bold mb-6">Welcome, {session.user.name}</h1>
       <div className="mb-8">
         <h2 className="text-2xl font-semibold mb-4">Your Questions</h2>
-        {questions.map((question: { id: Key | null | undefined; content: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined; answer: { content: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined } }) => (
-          <div key={question.id} className="bg-gray-100 p-4 rounded mb-4">
+        {questions.map((question) => (
+          <div key={question.id} className="bg-card text-card-foreground p-4 rounded-lg mb-4 shadow">
             <p className="font-medium">{question.content}</p>
             {question.answer ? (
               <p className="mt-2">Your answer: {question.answer.content}</p>
             ) : (
-              <Button className="mt-2">Answer</Button>
+              <Link href={`/answer/${question.id}`}>
+                <Button className="mt-2">Answer</Button>
+              </Link>
             )}
           </div>
         ))}
@@ -38,7 +40,7 @@ export default async function Dashboard() {
           type="text"
           value={`${process.env.NEXT_PUBLIC_BASE_URL}/profile/${session.user.id}`}
           readOnly
-          className="w-full p-2 border rounded mt-2"
+          className="w-full p-2 border rounded mt-2 bg-muted"
         />
       </div>
     </div>
