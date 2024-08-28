@@ -1,36 +1,119 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Anonymous QnA App
+
+## Overview
+
+Anonymous QnA is an application that allows users to receive and answer anonymous questions from people worldwide, common more across friends!
+
+## Features
+
+### For Registered Users:
+
+1. **User Authentication**: Secure login system using Google authentication.
+2. **Personal Dashboard**: 
+   - View questions received from anonymous users.
+   - Answer questions directly from the dashboard.
+   - Delete unwanted questions.
+3. **Profile Sharing**: 
+   - Unique profile link for each user.
+   - Easy sharing options to invite others to ask questions.
+4. **Theme Toggle**: Switch between light and dark modes for comfortable viewing.
+
+### For Anonymous Users:
+
+1. **Ask Questions**: Submit anonymous questions to registered users.
+2. **View Profiles**: Browse user profiles and see their answered questions.
+3. **User Search**: Search for registered users by name.
+
+### General Features:
+
+1. **Responsive Design**: Works seamlessly on desktop and mobile devices.
+2. **Real-time Updates**: Instant feedback on actions like submitting questions or answers.
+
+## Tech Stack
+
+- **Frontend**: 
+  - Next.js 14 (React framework)
+  - TypeScript
+  - Tailwind CSS for styling
+  - shadcn/ui for UI components
+
+- **Backend**: 
+  - Next.js API Routes
+  - Prisma ORM
+
+- **Database**: 
+  - PostgreSQL hosted on vercel
+
+- **Authentication**: 
+  - NextAuth.js with Google provider
+
+- **Deployment**: 
+  - Vercel (recommended)
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Node.js (v14 or later)
+- npm or yarn
+- PostgreSQL database
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Installation
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Clone the repository:
+   ```
+   git clone https://github.com/yourusername/anonymous-qna.git
+   cd anonymous-qna
+   ```
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+2. Install dependencies:
+   ```
+   npm install
+   ```
 
-## Learn More
+3. Set up environment variables:
+   Create a `.env` file in the root directory and add the following:
+   ```
+   DATABASE_URL="your_postgresql_connection_string"
+   AUTH_SECRET="your_nextauth_secret"
+   AUTH_GOOGLE_ID="your_google_client_id"
+   AUTH_GOOGLE_SECRET="your_google_client_secret"
+   ```
 
-To learn more about Next.js, take a look at the following resources:
+4. Set up the database:
+   ```
+   npx prisma migrate dev
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+5. Run the development server:
+   ```
+   npm run dev
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+6. Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-## Deploy on Vercel
+## Deployment
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The easiest way to deploy this app is using the [Vercel Platform](https://vercel.com). Follow these steps:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+1. Push your code to a GitHub repository.
+2. Connect your GitHub account to Vercel.
+3. Import the project from GitHub to Vercel.
+4. Set up the environment variables in Vercel's dashboard.
+5. Deploy!
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## License
+
+This project is licensed under the MIT License.
+
+## Acknowledgements
+
+- [Next.js](https://nextjs.org/)
+- [Prisma](https://www.prisma.io/)
+- [NextAuth.js](https://next-auth.js.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [shadcn/ui](https://ui.shadcn.com/)
